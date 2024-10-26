@@ -1,9 +1,6 @@
 #!/bin/env python3
 
-from collections import defaultdict, OrderedDict
-from itertools import groupby
-from operator import itemgetter
-from subprocess import run
+from collections import defaultdict
 from typing import Iterator
 import argparse as ap
 import git
@@ -40,7 +37,7 @@ if __name__ == '__main__':
     def member_name(author: git.Actor) -> str:
         return author_to_member.get((author.name, author.email), 'inconnu')
 
-    fig, ax = plt.subplots(figsize=(10,5))
+    fig, ax = plt.subplots(figsize=(10, 5))
 
     def hour_members(commits: Iterator[git.Commit], ax: plt.Axes):
         """ X ticks per hour and bars per member """
@@ -49,7 +46,6 @@ if __name__ == '__main__':
 
         for c in commits:
             results[member_name(c.author)][c.authored_datetime.hour] += 1
-       
 
         bottom = np.zeros(len(hours))
         for author, commit_counts in sorted(results.items(), key=lambda kv: sum(kv[1]), reverse=True):
@@ -66,16 +62,13 @@ if __name__ == '__main__':
         results: defaultdict[int, dict[str, int]] = defaultdict(lambda: {name: 0 for name in authors})
         for c in commits:
             results[c.authored_datetime.hour][member_name(c.author)] += 1
-        #for hour, commit_counts in sorted(results.items(), key=lambda kv: sum(kv[1].values()), reverse=True):
-        #    print(hour, authors, commit_counts.values())   
-        #exit()
 
         bottom = np.zeros(len(authors))
         for hour, commit_counts in sorted(results.items(), key=lambda kv: sum(kv[1].values()), reverse=True):
             ax.bar(authors, commit_counts.values(), width=1, label=hour, bottom=bottom)
-            #ax.set_xticks(authors)
+            # ax.set_xticks(authors)
             bottom += tuple(commit_counts.values())
-        
+
     hour_members(repo.iter_commits(), ax)
 
     ax.legend()
