@@ -1,0 +1,12 @@
+author_to_member = {
+        ('Scover', 'thediscover22450@gmail.com'): 'Raphaël',
+        ('Soladoc', 'romaingrandchamppro@gmail.com'): 'Romain',
+        ('marius', 'icelos@yahoo.com'): 'Marius',
+        ('BakaTech', '101347606+Baka-Nekoz@users.noreply.github.com'): 'Maël',
+        ('Xx-Nasank-xX', 'maelanpotier05@gmail.com'): 'Maëlan',
+        ('Benjamin', 'benjamin.dumontgirard@gmail.com'): 'Benjamin',
+        ('5cover', 'thediscover22450@gmail.com'): 'Raphaël',
+        ('mariuschartier', 'icelos@yahoo.com'): 'Marius',
+        ('Soladoc', '143883201+Soladoc@users.noreply.github.com'): 'Romain',
+        ('Xx-Nasank-xX', '125129998+Xx-Nasank-xX@users.noreply.github.com'): 'Maëlan',
+    }
