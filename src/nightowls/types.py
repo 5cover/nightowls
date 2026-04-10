@@ -25,6 +25,10 @@ class OutputConfig(TypedDict):
     path: str | None
 
 
+class ChartConfig(TypedDict):
+    title: str | None
+
+
 class FiltersConfig(TypedDict):
     since: str | None
     until: str | None
@@ -36,5 +40,6 @@ class ConfigDict(TypedDict):
     timezone: TimezoneMode
     identity_source: IdentitySource
     output: OutputConfig
+    chart: ChartConfig
     filters: FiltersConfig
     members: list[list[Any]]

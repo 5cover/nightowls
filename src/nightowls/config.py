@@ -20,6 +20,9 @@ DEFAULT_CONFIG: ConfigDict = {
         "format": "json",
         "path": None,
     },
+    "chart": {
+        "title": None,
+    },
     "filters": {
         "since": None,
         "until": None,

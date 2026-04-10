@@ -71,6 +71,9 @@ Example header in `nightowls.json`:
     "format": "json",
     "path": null
   },
+  "chart": {
+    "title": null
+  },
   "filters": {
     "since": null,
     "until": null,
@@ -103,6 +106,12 @@ Rules:
 - `{ "regex": "..." }` means regex match
 - if nothing matches, NightOwls falls back to the git actor name
 
+## Chart Title Behavior
+
+- If `chart.title` (or `--chart-title`) is set, it is used.
+- Otherwise title is `Commits by hour (stacked by member) - {repo name}` when repo name is available.
+- Final fallback is `Commits by hour (stacked by member)`.
+
 ## CLI Options
 
 ```text
@@ -111,6 +120,7 @@ nightowls [path]
   --timezone {local,utc}
   --output-format {json,png,config,members}
   --output-path PATH
+  --chart-title TEXT
   --identity-source {author,committer}
   --since EXPR
   --until EXPR
@@ -130,6 +140,12 @@ PNG output:
 
 ```bash
 nightowls . --output-format png --output-path out.png
+```
+
+PNG output with custom title:
+
+```bash
+nightowls . --output-format png --chart-title "Night activity overview"
 ```
 
 Resolved config output:

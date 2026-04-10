@@ -18,7 +18,7 @@ def emit_json(payload: Any, output_path: str | None) -> None:
     Path(output_path).write_text(serialized + "\n", encoding="utf-8")
 
 
-def emit_png(result: AnalysisResult, output_path: str | None) -> None:
+def emit_png(result: AnalysisResult, output_path: str | None, *, title: str) -> None:
     import matplotlib
 
     matplotlib.use("Agg")
@@ -35,7 +35,7 @@ def emit_png(result: AnalysisResult, output_path: str | None) -> None:
     ax.set_xticks(hours)
     ax.set_xlabel("Hour of day")
     ax.set_ylabel("Commit count")
-    ax.set_title("Commits by hour (stacked by member)")
+    ax.set_title(title)
     if result.counts_by_member:
         ax.legend(loc="upper right")
 

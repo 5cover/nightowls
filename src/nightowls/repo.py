@@ -17,15 +17,24 @@ def _is_url(value: str) -> bool:
     return bool(parsed.scheme and parsed.netloc)
 
 
+def _repo_name_from_url(url: str) -> str | None:
+    parsed = urlparse(url)
+    name = Path(parsed.path).name
+    if name.endswith(".git"):
+        name = name[:-4]
+    name = name.strip()
+    return name or None
+
+
 @contextmanager
-def open_repo(path_or_url: str) -> Iterator[tuple[git.Repo, Path]]:
+def open_repo(path_or_url: str) -> Iterator[tuple[git.Repo, Path, str | None]]:
     if _is_url(path_or_url):
         with TemporaryDirectory() as tmpdir:
             try:
                 repo = git.Repo.clone_from(path_or_url, tmpdir)
             except git.GitCommandError as exc:
                 raise RepoError(f"Failed to clone repository: {exc}") from exc
-            yield repo, Path(tmpdir)
+            yield repo, Path(tmpdir), _repo_name_from_url(path_or_url)
             return
 
     path = Path(path_or_url)
@@ -38,7 +47,8 @@ def open_repo(path_or_url: str) -> Iterator[tuple[git.Repo, Path]]:
     if root is None:
         raise RepoError("Bare repositories are not supported for local analysis")
 
-    yield repo, Path(root)
+    repo_name = Path(root).name.strip() or None
+    yield repo, Path(root), repo_name
 
 
 def iter_commits(repo: git.Repo, *, filters: dict[str, Any]) -> Iterator[git.Commit]:

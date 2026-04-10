@@ -16,6 +16,13 @@
         "path"  : { "type": ["string", "null"]                                               }
       }
     },
+    "chart"          : {
+      "type"                : "object",
+      "additionalProperties": false,
+      "properties"          : {
+        "title": { "type": ["string", "null"] }
+      }
+    },
     "filters"        : {
       "type"                : "object",
       "additionalProperties": false,

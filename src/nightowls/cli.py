@@ -28,6 +28,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Output format",
     )
     parser.add_argument("-o", "--output-path", help="Write output to this path")
+    parser.add_argument("--chart-title", help="Custom chart title for PNG output")
     parser.add_argument(
         "--identity-source",
         choices=["author", "committer"],
@@ -57,6 +58,9 @@ def _build_cli_overrides(args: argparse.Namespace) -> dict[str, Any]:
     if output:
         overrides["output"] = output
 
+    if args.chart_title is not None:
+        overrides["chart"] = {"title": args.chart_title}
+
     filters: dict[str, Any] = {}
     if args.since is not None:
         filters["since"] = args.since
@@ -72,12 +76,20 @@ def _build_cli_overrides(args: argparse.Namespace) -> dict[str, Any]:
     return overrides
 
 
+def _resolve_chart_title(config_title: str | None, repo_name: str | None) -> str:
+    if config_title:
+        return config_title
+    if repo_name:
+        return f"Commits by hour (stacked by member) - {repo_name}"
+    return "Commits by hour (stacked by member)"
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
 
     try:
-        with open_repo(args.path) as (repo, repo_root):
+        with open_repo(args.path) as (repo, repo_root, repo_name):
             config = resolve_config(
                 repo_path=repo_root,
                 explicit_config_path=args.config,
@@ -104,7 +116,11 @@ def main(argv: list[str] | None = None) -> int:
                     output_path,
                 )
             elif output_format == "png":
-                emit_png(analysis_result, output_path)
+                emit_png(
+                    analysis_result,
+                    output_path,
+                    title=_resolve_chart_title(config["chart"]["title"], repo_name),
+                )
             elif output_format == "members":
                 emit_json({"members": bootstrap_member_rules(identities)}, output_path)
             else:
