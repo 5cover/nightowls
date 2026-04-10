@@ -2,21 +2,21 @@
 
 from collections import defaultdict
 from collections.abc import Iterator
-import argparse as ap
+from matplotlib.axes import Axes
 from tempfile import TemporaryDirectory
-from typing import TextIO
+import argparse as ap
 import git
 import matplotlib.pyplot as plt
+import numpy as np
 import sys
 import validators
-import numpy as np
 
 
 def member_name(author: git.Actor) -> str:
     return f'{author.name}'
 
 
-def hour_members(commits: Iterator[git.Commit], ax: plt.Axes):
+def hour_members(commits: Iterator[git.Commit], ax: Axes):
     """ X ticks per hour and bars per member """
     hours = np.arange(24)
     results = defaultdict(lambda: np.zeros(len(hours)))
@@ -30,18 +30,18 @@ def hour_members(commits: Iterator[git.Commit], ax: plt.Axes):
         ax.set_xticks(range(len(hours)))
         bottom += commit_counts
 
-    ax.set_xlabel('Heure de la journée')
-    ax.set_ylabel('Nombre de commits')
+    ax.set_xlabel('Time of day')
+    ax.set_ylabel('Commit count')
 
 
-def member_hours(commits: Iterator[git.Commit], ax: plt.Axes):
+def member_hours(commits: Iterator[git.Commit], ax: Axes):
     """ X ticks per members and bars per hour """
     results: defaultdict[int, defaultdict[str, int]] = defaultdict(lambda: defaultdict(lambda: 0))
     for c in commits:
         results[c.authored_datetime.hour][member_name(c.author)] += 1
 
     for hour, commit_counts in sorted(results.items(), key=lambda kv: sum(kv[1].values()), reverse=True):
-        ax.bar(commit_counts.keys(), commit_counts.values(), width=1, label=hour)
+        ax.bar(list(commit_counts.keys()), list(commit_counts.values()), width=1, label=hour)
         # ax.set_xticks(authors)
 
 
@@ -51,15 +51,13 @@ def run(repo: git.Repo):
     hour_members(repo.iter_commits(), ax)
 
     ax.legend()
-    assert isinstance(sys.stdout, TextIO)
     fig.savefig(sys.stdout)  # png
 
 
-class CloneProgressPrinter(git.RemoteProgress):
-    def update(self, op_code, cur_count, max_count=None, message=""):
-        print(f'Cloning... {float(cur_count) / float(max_count or 100.0):.2%}',
-              message or None,
-              file=sys.stderr)
+def progress(op_code, cur_count, max_count=None, message=''):
+    print(f'Cloning... {float(cur_count) / float(max_count or 100.0):.2%}',
+          message or None,
+          file=sys.stderr)
 
 
 if __name__ == '__main__':
@@ -70,10 +68,10 @@ if __name__ == '__main__':
     try:
         if validators.url(path):
             with TemporaryDirectory() as tmpdirname:
-                run(git.Repo.clone_from(path, tmpdirname, progress=CloneProgressPrinter(), multi_options=['--bare']))
+                run(git.Repo.clone_from(path, tmpdirname, progres=progress, multi_options=['--bare']))
         else:
             run(git.Repo(path))
-    except git.exc.InvalidGitRepositoryError as e:
+    except git.InvalidGitRepositoryError as e:
         p.error(f'invalid git repostory: {e.args[0]}')
-    except git.exc.NoSuchPathError as e:
+    except git.NoSuchPathError as e:
         p.error(f'no such path: {e.args[0]}')
