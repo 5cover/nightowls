@@ -18,7 +18,13 @@ def emit_json(payload: Any, output_path: str | None) -> None:
     Path(output_path).write_text(serialized + "\n", encoding="utf-8")
 
 
-def emit_png(result: AnalysisResult, output_path: str | None, *, title: str) -> None:
+def emit_png(
+    result: AnalysisResult,
+    output_path: str | None,
+    *,
+    title: str,
+    metric: str,
+) -> None:
     import matplotlib
 
     matplotlib.use("Agg")
@@ -34,7 +40,10 @@ def emit_png(result: AnalysisResult, output_path: str | None, *, title: str) -> 
 
     ax.set_xticks(hours)
     ax.set_xlabel("Hour of day")
-    ax.set_ylabel("Commit count")
+    if metric == "lines_changed":
+        ax.set_ylabel("Lines changed")
+    else:
+        ax.set_ylabel("Commit count")
     ax.set_title(title)
     if result.counts_by_member:
         ax.legend(loc="upper right")

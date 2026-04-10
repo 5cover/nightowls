@@ -19,6 +19,12 @@ class Commit:
     committer: Actor
     authored_datetime: datetime
     committed_datetime: datetime
+    stats: object | None = None
+
+
+@dataclass
+class Stats:
+    total: dict[str, int]
 
 
 class AnalysisTests(unittest.TestCase):
@@ -27,6 +33,7 @@ class AnalysisTests(unittest.TestCase):
         return {
             "timezone": "local",
             "identity_source": "author",
+            "metric": "commit_count",
             "member_sort": "commit_count",
             "output": {"format": "json", "path": None},
             "chart": {"title": None},
@@ -119,6 +126,29 @@ class AnalysisTests(unittest.TestCase):
         config = {**self._base_config(), "member_sort": ["beta", "alpha"]}
         result, _ = analyze_commits(commits, config)
         self.assertEqual(list(result.counts_by_member.keys()), ["beta", "alpha", "zeta"])
+
+    def test_lines_changed_metric_uses_commit_sizes(self) -> None:
+        commits = [
+            Commit(
+                author=Actor(name="alpha", email="a@example.com"),
+                committer=Actor(name="alpha", email="a@example.com"),
+                authored_datetime=datetime(2026, 1, 1, 10, 0, tzinfo=timezone.utc),
+                committed_datetime=datetime(2026, 1, 1, 10, 0, tzinfo=timezone.utc),
+                stats=Stats(total={"insertions": 1, "deletions": 1}),
+            ),
+            Commit(
+                author=Actor(name="beta", email="b@example.com"),
+                committer=Actor(name="beta", email="b@example.com"),
+                authored_datetime=datetime(2026, 1, 1, 10, 0, tzinfo=timezone.utc),
+                committed_datetime=datetime(2026, 1, 1, 10, 0, tzinfo=timezone.utc),
+                stats=Stats(total={"insertions": 10, "deletions": 0}),
+            ),
+        ]
+        config = {**self._base_config(), "metric": "lines_changed", "member_sort": "commit_count"}
+        result, _ = analyze_commits(commits, config)
+        self.assertEqual(result.counts_by_member["alpha"][10], 2)
+        self.assertEqual(result.counts_by_member["beta"][10], 10)
+        self.assertEqual(list(result.counts_by_member.keys()), ["beta", "alpha"])
 
 
 if __name__ == "__main__":

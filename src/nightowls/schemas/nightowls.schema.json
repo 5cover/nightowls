@@ -8,6 +8,7 @@
     "$schema"        : {"type": "string"},
     "timezone"       : { "type": "string", "enum": ["local", "utc"] },
     "identity_source": { "type": "string", "enum": ["author", "committer"] },
+    "metric"         : { "type": "string", "enum": ["commit_count", "lines_changed"] },
     "member_sort"    : {
       "oneOf": [
         { "type": "string", "enum": ["alphabetical", "commit_count"] },

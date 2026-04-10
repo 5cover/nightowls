@@ -23,6 +23,11 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("-c", "--config", help="Path to JSON config file")
     parser.add_argument("--timezone", choices=["local", "utc"], help="Timezone mode")
     parser.add_argument(
+        "--metric",
+        choices=["commit_count", "lines_changed"],
+        help="Aggregation metric",
+    )
+    parser.add_argument(
         "-f", "--output-format",
         choices=["json", "png", "config", "members"],
         help="Output format",
@@ -49,6 +54,9 @@ def _build_cli_overrides(args: argparse.Namespace) -> dict[str, Any]:
 
     if args.identity_source is not None:
         overrides["identity_source"] = args.identity_source
+
+    if args.metric is not None:
+        overrides["metric"] = args.metric
 
     output: dict[str, Any] = {}
     if args.output_format is not None:
@@ -112,6 +120,7 @@ def main(argv: list[str] | None = None) -> int:
                         analysis_result,
                         timezone_mode=config["timezone"],
                         identity_source=config["identity_source"],
+                        metric=config["metric"],
                     ),
                     output_path,
                 )
@@ -120,6 +129,7 @@ def main(argv: list[str] | None = None) -> int:
                     analysis_result,
                     output_path,
                     title=_resolve_chart_title(config["chart"]["title"], repo_name),
+                    metric=config["metric"],
                 )
             elif output_format == "members":
                 emit_json({"members": bootstrap_member_rules(identities)}, output_path)

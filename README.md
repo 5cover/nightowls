@@ -74,6 +74,7 @@ Example header in `nightowls.json`:
   "$schema": "https://raw.githubusercontent.com/5cover/nightowls/main/src/nightowls/schemas/nightowls.schema.json",
   "timezone": "local",
   "identity_source": "author",
+  "metric": "commit_count",
   "member_sort": "commit_count",
   "output": {
     "format": "json",
@@ -114,11 +115,18 @@ Rules:
 - `{ "regex": "..." }` means regex match
 - if nothing matches, NightOwls falls back to the git actor name
 
+## Aggregation Metric
+
+`metric` controls bar segment size and JSON totals:
+
+- `"commit_count"` (default): each commit contributes `1`
+- `"lines_changed"`: each commit contributes `insertions + deletions`
+
 ## Member Ordering
 
 `member_sort` controls member order in JSON output and chart stacking/color assignment.
 
-- `"commit_count"` (default): descending by total commit count, then alphabetical
+- `"commit_count"` (default): descending by aggregated metric total, then alphabetical
 - `"alphabetical"`: ascending by member name
 - `["name1", "name2", ...]`: custom order; members not listed are appended alphabetically
 
@@ -134,6 +142,7 @@ Rules:
 nightowls [path]
   -c, --config PATH
   --timezone {local,utc}
+  --metric {commit_count,lines_changed}
   --output-format {json,png,config,members}
   --output-path PATH
   --chart-title TEXT
@@ -156,6 +165,12 @@ PNG output:
 
 ```bash
 nightowls . --output-format png --output-path out.png
+```
+
+PNG output weighted by changed lines:
+
+```bash
+nightowls . --output-format png --metric lines_changed --output-path out.png
 ```
 
 PNG output with custom title:

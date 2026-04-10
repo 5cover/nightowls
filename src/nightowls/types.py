@@ -6,6 +6,7 @@ from typing import Any, Literal, TypedDict
 TimezoneMode = Literal["local", "utc"]
 OutputFormat = Literal["json", "png", "config", "members"]
 IdentitySource = Literal["author", "committer"]
+MetricMode = Literal["commit_count", "lines_changed"]
 MemberSortMode = Literal["alphabetical", "commit_count"] | list[str]
 
 
@@ -40,6 +41,7 @@ class FiltersConfig(TypedDict):
 class ConfigDict(TypedDict):
     timezone: TimezoneMode
     identity_source: IdentitySource
+    metric: MetricMode
     member_sort: MemberSortMode
     output: OutputConfig
     chart: ChartConfig

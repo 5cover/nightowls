@@ -32,6 +32,15 @@ def _identity_datetime(commit: Any, identity_source: str) -> datetime:
     return commit.authored_datetime
 
 
+def _commit_weight(commit: Any, metric: str) -> int:
+    if metric == "lines_changed":
+        total = getattr(getattr(commit, "stats", None), "total", {}) or {}
+        insertions = total.get("insertions", 0)
+        deletions = total.get("deletions", 0)
+        return int(insertions) + int(deletions)
+    return 1
+
+
 def _ordered_member_counts(
     counts: dict[str, list[int]],
     member_sort: str | list[str],
@@ -70,14 +79,20 @@ def analyze_commits(commits: list[Any], config: ConfigDict) -> tuple[AnalysisRes
             _identity_datetime(commit, config["identity_source"]),
             config["timezone"],
         )
-        counts[member_name][event_dt.hour] += 1
+        counts[member_name][event_dt.hour] += _commit_weight(commit, config["metric"])
 
     ordered_counts = _ordered_member_counts(counts, config["member_sort"])
 
     return AnalysisResult(counts_by_member=ordered_counts, total_commits=len(commits)), identities
 
 
-def analysis_to_json(result: AnalysisResult, *, timezone_mode: str, identity_source: str) -> dict[str, Any]:
+def analysis_to_json(
+    result: AnalysisResult,
+    *,
+    timezone_mode: str,
+    identity_source: str,
+    metric: str,
+) -> dict[str, Any]:
     totals_by_hour = [0] * 24
     for counts in result.counts_by_member.values():
         for hour, value in enumerate(counts):
@@ -87,6 +102,7 @@ def analysis_to_json(result: AnalysisResult, *, timezone_mode: str, identity_sou
         "metadata": {
             "timezone": timezone_mode,
             "identity_source": identity_source,
+            "metric": metric,
             "total_commits": result.total_commits,
         },
         "hours": list(range(24)),
