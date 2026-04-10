@@ -1,5 +1,12 @@
 # NightOwls
 
+[![Tests](https://github.com/5cover/nightowls/actions/workflows/ci.yml/badge.svg)](https://github.com/5cover/nightowls/actions/workflows/ci.yml)
+[![Package Check](https://github.com/5cover/nightowls/actions/workflows/package.yml/badge.svg)](https://github.com/5cover/nightowls/actions/workflows/package.yml)
+[![Publish](https://github.com/5cover/nightowls/actions/workflows/publish.yml/badge.svg)](https://github.com/5cover/nightowls/actions/workflows/publish.yml)
+[![PyPI version](https://badge.fury.io/py/nightowls.svg)](https://badge.fury.io/py/nightowls)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/nightowls)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 NightOwls is a Python CLI for analyzing Git commit activity by hour of day.
 
 It supports:
@@ -179,6 +186,16 @@ nightowls . -c ./nightowls.json --output-format json
 
 ```bash
 python -m build
+```
+
+## Publish To PyPI
+
+- The `Publish` workflow runs on tags matching `v*` (for example `v1.0.1`).
+- Configure PyPI Trusted Publishing for this repository, then create and push a version tag:
+
+```bash
+git tag v1.0.1
+git push origin v1.0.1
 ```
 
 ## Test

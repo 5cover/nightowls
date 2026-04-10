@@ -4,27 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nightowls"
-version = "0.1.0"
+version = "1.0.0"
 description = "Analyze Git commit activity by hour with member mapping and configurable outputs."
 readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"
-authors = [
-  { name = "Raphael Scover", email = "thediscover22450@gmail.com" },
-]
+authors = [{ name = "5cover", email = "thediscover22450@gmail.com" }]
 keywords = ["git", "analytics", "cli", "productivity"]
 classifiers = [
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.13",
-  "Operating System :: OS Independent",
-  "Environment :: Console",
-  "Topic :: Software Development :: Version Control :: Git",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+    "Topic :: Software Development :: Version Control :: Git",
 ]
-dependencies = [
-  "GitPython>=3.1.46",
-  "jsonschema>=4.23.0",
-  "matplotlib>=3.10.0",
-]
+dependencies = ["GitPython>=3.1.46", "jsonschema>=4.23.0", "matplotlib>=3.10.0"]
 
 [project.scripts]
 nightowls = "nightowls.cli:main"
@@ -33,12 +27,24 @@ nightowls = "nightowls.cli:main"
 Homepage = "https://github.com/5cover/nightowls"
 Repository = "https://github.com/5cover/nightowls"
 Issues = "https://github.com/5cover/nightowls/issues"
+Changelog = "https://github.com/5cover/nightowls/blob/main/CHANGELOG.md"
+
+[tool.pytest.ini_options]
+addopts = "--cov"
+testpaths = ["tests"]
+
+[tool.mypy]
+mypy_path = "src"
+ignore_missing_imports = true
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 nightowls = ["schemas/*.json"]
+
+[tool.isort]
+profile = "black"
