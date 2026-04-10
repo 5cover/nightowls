@@ -1,18 +1,45 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "nightowls"
-version = "0.0.1"
-authors = [
-  { name="Scover", email="thediscover22450@gmail.com" },
-]
-description = "A CLI tool for your Git repos that analyzes commit frequency per time of day."
+version = "0.1.0"
+description = "Analyze Git commit activity by hour with member mapping and configurable outputs."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.13"
+license = "MIT"
+authors = [
+  { name = "Raphael Scover", email = "thediscover22450@gmail.com" },
+]
+keywords = ["git", "analytics", "cli", "productivity"]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.13",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Environment :: Console",
+  "Topic :: Software Development :: Version Control :: Git",
+]
+dependencies = [
+  "GitPython>=3.1.46",
+  "jsonschema>=4.23.0",
+  "matplotlib>=3.10.0",
 ]
 
+[project.scripts]
+nightowls = "nightowls.cli:main"
+
 [project.urls]
-Homepage = "https://github.com/pypa/sampleproject"
-Issues = "https://github.com/pypa/sampleproject/issues"
+Homepage = "https://github.com/raphaelscover/nightowls"
+Repository = "https://github.com/raphaelscover/nightowls"
+Issues = "https://github.com/raphaelscover/nightowls/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+nightowls = ["schemas/*.json"]
