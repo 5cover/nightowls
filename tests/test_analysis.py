@@ -42,6 +42,40 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(local_result.counts_by_member["A"][23], 1)
         self.assertEqual(utc_result.counts_by_member["A"][1], 1)
 
+    def test_members_are_sorted_by_name_for_stable_order(self) -> None:
+        commits = [
+            Commit(
+                author=Actor(name="zeta", email="z@example.com"),
+                committer=Actor(name="zeta", email="z@example.com"),
+                authored_datetime=datetime(2026, 1, 1, 10, 0, tzinfo=timezone.utc),
+                committed_datetime=datetime(2026, 1, 1, 10, 0, tzinfo=timezone.utc),
+            ),
+            Commit(
+                author=Actor(name="zeta", email="z@example.com"),
+                committer=Actor(name="zeta", email="z@example.com"),
+                authored_datetime=datetime(2026, 1, 1, 11, 0, tzinfo=timezone.utc),
+                committed_datetime=datetime(2026, 1, 1, 11, 0, tzinfo=timezone.utc),
+            ),
+            Commit(
+                author=Actor(name="alpha", email="a@example.com"),
+                committer=Actor(name="alpha", email="a@example.com"),
+                authored_datetime=datetime(2026, 1, 1, 12, 0, tzinfo=timezone.utc),
+                committed_datetime=datetime(2026, 1, 1, 12, 0, tzinfo=timezone.utc),
+            ),
+        ]
+
+        config = {
+            "timezone": "local",
+            "identity_source": "author",
+            "output": {"format": "json", "path": None},
+            "chart": {"title": None},
+            "filters": {"since": None, "until": None, "branch": None, "no_merges": False},
+            "members": [],
+        }
+
+        result, _ = analyze_commits(commits, config)
+        self.assertEqual(list(result.counts_by_member.keys()), ["alpha", "zeta"])
+
 
 if __name__ == "__main__":
     unittest.main()

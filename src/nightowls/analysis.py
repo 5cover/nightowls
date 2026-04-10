@@ -50,8 +50,7 @@ def analyze_commits(commits: list[Any], config: ConfigDict) -> tuple[AnalysisRes
     ordered_counts = dict(
         sorted(
             counts.items(),
-            key=lambda item: (sum(item[1]), item[0].lower()),
-            reverse=True,
+            key=lambda item: item[0],
         )
     )
 
