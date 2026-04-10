@@ -67,6 +67,7 @@ Example header in `nightowls.json`:
   "$schema": "https://raw.githubusercontent.com/5cover/nightowls/main/src/nightowls/schemas/nightowls.schema.json",
   "timezone": "local",
   "identity_source": "author",
+  "member_sort": "commit_count",
   "output": {
     "format": "json",
     "path": null
@@ -105,6 +106,14 @@ Rules:
 - string value means exact match
 - `{ "regex": "..." }` means regex match
 - if nothing matches, NightOwls falls back to the git actor name
+
+## Member Ordering
+
+`member_sort` controls member order in JSON output and chart stacking/color assignment.
+
+- `"commit_count"` (default): descending by total commit count, then alphabetical
+- `"alphabetical"`: ascending by member name
+- `["name1", "name2", ...]`: custom order; members not listed are appended alphabetically
 
 ## Chart Title Behavior
 

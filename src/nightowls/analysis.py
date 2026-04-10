@@ -32,6 +32,31 @@ def _identity_datetime(commit: Any, identity_source: str) -> datetime:
     return commit.authored_datetime
 
 
+def _ordered_member_counts(
+    counts: dict[str, list[int]],
+    member_sort: str | list[str],
+) -> dict[str, list[int]]:
+    if isinstance(member_sort, list):
+        rank = {name: index for index, name in enumerate(member_sort)}
+        return dict(
+            sorted(
+                counts.items(),
+                key=lambda item: (rank.get(item[0], len(rank)), item[0].lower()),
+            )
+        )
+
+    if member_sort == "alphabetical":
+        return dict(sorted(counts.items(), key=lambda item: item[0].lower()))
+
+    # default and fallback: highest commit count first
+    return dict(
+        sorted(
+            counts.items(),
+            key=lambda item: (-sum(item[1]), item[0].lower()),
+        )
+    )
+
+
 def analyze_commits(commits: list[Any], config: ConfigDict) -> tuple[AnalysisResult, list[Identity]]:
     counts: dict[str, list[int]] = defaultdict(lambda: [0] * 24)
     identities: list[Identity] = []
@@ -47,12 +72,7 @@ def analyze_commits(commits: list[Any], config: ConfigDict) -> tuple[AnalysisRes
         )
         counts[member_name][event_dt.hour] += 1
 
-    ordered_counts = dict(
-        sorted(
-            counts.items(),
-            key=lambda item: item[0],
-        )
-    )
+    ordered_counts = _ordered_member_counts(counts, config["member_sort"])
 
     return AnalysisResult(counts_by_member=ordered_counts, total_commits=len(commits)), identities
 

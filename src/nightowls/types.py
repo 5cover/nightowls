@@ -6,6 +6,7 @@ from typing import Any, Literal, TypedDict
 TimezoneMode = Literal["local", "utc"]
 OutputFormat = Literal["json", "png", "config", "members"]
 IdentitySource = Literal["author", "committer"]
+MemberSortMode = Literal["alphabetical", "commit_count"] | list[str]
 
 
 class RegexMatcher(TypedDict):
@@ -39,6 +40,7 @@ class FiltersConfig(TypedDict):
 class ConfigDict(TypedDict):
     timezone: TimezoneMode
     identity_source: IdentitySource
+    member_sort: MemberSortMode
     output: OutputConfig
     chart: ChartConfig
     filters: FiltersConfig

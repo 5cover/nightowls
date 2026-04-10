@@ -16,6 +16,7 @@ from .types import ConfigDict
 DEFAULT_CONFIG: ConfigDict = {
     "timezone": "local",
     "identity_source": "author",
+    "member_sort": "commit_count",
     "output": {
         "format": "json",
         "path": None,
