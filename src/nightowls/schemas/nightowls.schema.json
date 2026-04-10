@@ -1,56 +1,48 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/raphaelscover/nightowls/main/src/nightowls/schemas/nightowls.schema.json",
+  "$id": "https://raw.githubusercontent.com/5cover/nightowls/main/src/nightowls/schemas/nightowls.schema.json",
   "title": "Nightowls Configuration",
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "$schema": {"type": "string"},
-    "timezone": {"type": "string", "enum": ["local", "utc"]},
-    "identity_source": {"type": "string", "enum": ["author", "committer"]},
-    "output": {
-      "type": "object",
+    "$schema"        : {"type": "string"},
+    "timezone"       : { "type": "string", "enum": ["local", "utc"] },
+    "identity_source": { "type": "string", "enum": ["author", "committer"] },
+    "output"         : {
+      "type"                : "object",
       "additionalProperties": false,
-      "properties": {
-        "format": {"type": "string", "enum": ["json", "png", "config", "members"]},
-        "path": {"type": ["string", "null"]}
+      "properties"          : {
+        "format": { "type": "string",           "enum": ["json", "png", "config", "members"] },
+        "path"  : { "type": ["string", "null"]                                               }
       }
     },
-    "filters": {
-      "type": "object",
+    "filters"        : {
+      "type"                : "object",
       "additionalProperties": false,
-      "properties": {
-        "since": {"type": ["string", "null"]},
-        "until": {"type": ["string", "null"]},
-        "branch": {"type": ["string", "null"]},
-        "no_merges": {"type": "boolean"}
+      "properties"          : {
+        "since"    : { "type": ["string", "null"] },
+        "until"    : { "type": ["string", "null"] },
+        "branch"   : { "type": ["string", "null"] },
+        "no_merges": { "type": "boolean"          }
       }
     },
-    "members": {
-      "type": "array",
+    "members"        : {
+      "type" : "array",
       "items": {
-        "type": "array",
-        "minItems": 2,
-        "maxItems": 2,
+        "type"       : "array",
+        "minItems"   : 2,
+        "maxItems"   : 2,
         "prefixItems": [
           {"type": "string", "minLength": 1},
           {
-            "type": "object",
+            "type"                : "object",
             "additionalProperties": false,
-            "properties": {
-              "name": {
-                "oneOf": [
-                  {"type": "string"},
-                  {"$ref": "#/$defs/regex_matcher"},
-                  {"type": "null"}
-                ]
+            "properties"          : {
+              "name" : {
+                "oneOf": [ {"type": "string"}, {"$ref": "#/$defs/regex_matcher"}, {"type": "null"} ]
               },
               "email": {
-                "oneOf": [
-                  {"type": "string"},
-                  {"$ref": "#/$defs/regex_matcher"},
-                  {"type": "null"}
-                ]
+                "oneOf": [ {"type": "string"}, {"$ref": "#/$defs/regex_matcher"}, {"type": "null"} ]
               }
             }
           }
@@ -60,12 +52,10 @@
   },
   "$defs": {
     "regex_matcher": {
-      "type": "object",
+      "type"                : "object",
       "additionalProperties": false,
-      "properties": {
-        "regex": {"type": "string"}
-      },
-      "required": ["regex"]
+      "properties"          : { "regex": {"type": "string"} },
+      "required"            : ["regex"]
     }
   }
 }

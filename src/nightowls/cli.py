@@ -23,11 +23,11 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("-c", "--config", help="Path to JSON config file")
     parser.add_argument("--timezone", choices=["local", "utc"], help="Timezone mode")
     parser.add_argument(
-        "--output-format",
+        "-f", "--output-format",
         choices=["json", "png", "config", "members"],
         help="Output format",
     )
-    parser.add_argument("--output-path", help="Write output to this path")
+    parser.add_argument("-o", "--output-path", help="Write output to this path")
     parser.add_argument(
         "--identity-source",
         choices=["author", "committer"],

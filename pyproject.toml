@@ -16,7 +16,6 @@ keywords = ["git", "analytics", "cli", "productivity"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.13",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Environment :: Console",
   "Topic :: Software Development :: Version Control :: Git",
@@ -31,9 +30,9 @@ dependencies = [
 nightowls = "nightowls.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/raphaelscover/nightowls"
-Repository = "https://github.com/raphaelscover/nightowls"
-Issues = "https://github.com/raphaelscover/nightowls/issues"
+Homepage = "https://github.com/5cover/nightowls"
+Repository = "https://github.com/5cover/nightowls"
+Issues = "https://github.com/5cover/nightowls/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
